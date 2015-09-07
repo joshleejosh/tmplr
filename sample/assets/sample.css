@@ -1,0 +1,33 @@
+
+.clear {
+	clear: both;
+}
+
+body {
+	font-family: Times, Times New Roman, serif;
+	font-size: 18px;
+	background-color: #eee;
+	color: #222;
+}
+
+#header {
+	margin-bottom: 2em;
+	border-bottom: solid 1px #222;
+	text-align: center;
+}
+
+#body {
+	width: 36em;
+	margin: 0 auto;
+}
+
+#footer {
+	margin-top: 2em;
+	border-top: solid 1px #222;
+	text-align: center;
+}
+
+.byline {
+	font-style: italic;
+}
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+ 
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+<title><@siteTitle@></title>
+<subtitle><@siteBlurb@></subtitle>
+<link href="<@baseurl@>/feed.xml" rel="self" />
+<link href="<@baseurl@>" />
+<updated><@siteTimestamp-rfc3339@></updated>
+
+<@loopentries-feedEntry.xml@>
+
+</feed>
+

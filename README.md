@@ -1,6 +1,6 @@
 TMPLR
 
-Just another static site generator.
+Just another quick and dirty static site generator.
 
-Try 'python tmplr -h' for usage instructions.
+Take a look at the sample pages under samples/source for some instructions.
 

@@ -1,0 +1,15 @@
+
+<entry>
+    <title><@title@></title>
+    <link href="<@baseurl@>/<@url@>" />
+    <updated><@date-rfc3339@></updated>
+    <summary><@blurb@></summary>
+    <content type="html">
+    <@body-escaped@>
+    </content>
+    <author>
+          <name>The Author</name>
+          <email>you@example.com</email>
+    </author>
+</entry>
+
