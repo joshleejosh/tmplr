@@ -34,7 +34,7 @@ def generate_index():
     fp = open(fn, 'w')
     ie = entry.empty_entry()
     ie['title'] = consts.INDEX_TITLE
-    ie['blurb'] = 'Josh Lee\'s weblog.'
+    ie['blurb'] = consts.BLURB
     fp.write(template.run_template_entry('htmlHead.html', ie))
     fp.write(template.run_template_loop('index.html', ie, entries, consts.NUM_INDEX_ENTRIES))
     fp.write(template.run_template_entry('htmlFoot.html', ie))
@@ -57,7 +57,7 @@ def generate_archive_entry():
     print "Generate archive as entry %d"%aeid
     oute = entry.empty_entry()
     oute['id'] = aeid
-    oute['title'] = 'Archive'
+    oute['title'] = consts.ARCHIVE_TITLE
     oute['slug'] = 'archive'
     oute['date'] = s2d('2013-09-25 12:00:00')
     oute['blurb'] = 'A list of all %s posts.'%consts.TITLE
@@ -74,8 +74,8 @@ def generate_archive():
     fn = os.path.join(consts.OUTDIR, 'archive.html')
     fp = open(fn, 'w')
     ie = entry.empty_entry()
-    ie['title'] = 'Archive'
-    ie['blurb'] = 'Archive of Josh Lee\'s weblog.'
+    ie['title'] = consts.ARCHIVE_TITLE
+    ie['blurb'] = ''
     fp.write(template.run_template_entry('htmlHead.html', ie))
     fp.write(template.run_template_loop('archive.html', ie, entry.get_entries()))
     fp.write(template.run_template_entry('htmlFoot.html', ie))

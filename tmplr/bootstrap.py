@@ -1,7 +1,7 @@
 import consts, helpers, outputter, entry, template
 
-def configure(args):
-    consts.setup_consts(args)
+def configure(args, v, f):
+    consts.setup_consts(args, v, f)
 
 # Assumes configure() has been called.
 def run(command):
