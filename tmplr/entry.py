@@ -108,7 +108,7 @@ blurb: %s
 # Create a new entry file in INDIR
 def new_entry():
     newId = consts.FIRSTID
-    for e in get_entries().iterkeys():
+    for e in gEntries.iterkeys():
         if int(e) > newId:
             newId = int(e)
     newId += 1
