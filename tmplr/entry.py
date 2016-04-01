@@ -101,6 +101,7 @@ ENTRY_HEADER = """title: %s
 slug: %s
 date: %s
 blurb: %s
+tags: %s
 
 """
 
@@ -117,10 +118,11 @@ def new_entry():
     slug = datetime.datetime.strftime(consts.NOW, '%B-%d-%Y').lower()
     ds = d2s_dt(consts.NOW)
     blurb = ''
+    tags = ''
 
     fn = os.path.join(consts.INDIR, str(newId) + ENTRY_SUFFIX)
     print fn
     fp = file(fn, 'w')
-    fp.write(ENTRY_HEADER%(title, slug, ds, blurb))
+    fp.write(ENTRY_HEADER%(title, slug, ds, blurb, tags))
     fp.close()
 
