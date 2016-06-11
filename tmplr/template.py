@@ -47,7 +47,7 @@ def run_template_entry(tk, en):
     s = tm['template']
     for i in reTemplateTag.findall(s):
         nv = run_template_tag(i, en)
-        s = re.sub('\<@'+i+'@\>', nv, s)
+        s = re.sub('\<@'+i+'@\>', nv.decode('utf-8'), s.decode('utf-8'))
     return s
 
 def run_template_loop(tk, baseEntry, entries, numToDo=-1):

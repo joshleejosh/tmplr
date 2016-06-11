@@ -21,7 +21,7 @@ def generate_entries():
             fp = open(fn, 'w')
             fp.write(template.run_template_entry('htmlHead.html', e))
             s = template.run_template_entry('entry.html', e)
-            fp.write(s)
+            fp.write(s.encode('ascii', 'xmlcharrefreplace'))
             fp.write(template.run_template_entry('htmlFoot.html', e))
             fp.close()
             out += 1
