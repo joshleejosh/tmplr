@@ -1,5 +1,5 @@
 import os, copy, markdown, collections
-import consts
+import consts, template
 from util import *
 
 ENTRY_SUFFIX = '.md'
@@ -19,7 +19,7 @@ def setup():
 def empty_entry():
     rv = collections.defaultdict(str)
     rv.update({
-        'id':consts.FIRSTID,
+        'id':str(consts.FIRSTID),
         'title': '',
         'slug': '',
         'blurb': '',
@@ -100,18 +100,6 @@ def get_entries():
 
 # ############################################################# #
 
-ENTRY_HEADER = """title: %s
-slug: %s
-date: %s
-byline: 
-projdate: 
-projurl: 
-projlink: 
-
-
-"""
-
-
 # Create a new entry file in INDIR
 def new_entry():
     newId = consts.FIRSTID
@@ -120,15 +108,16 @@ def new_entry():
             newId = int(e)
     newId += 1
 
-    title = "Links for %s"%datetime.datetime.strftime(consts.NOW, '%B %e, %Y')
-    slug = datetime.datetime.strftime(consts.NOW, '%B-%d-%Y').lower()
-    ds = d2s_dt(consts.NOW)
-    blurb = ''
-    tags = ''
+    e = empty_entry()
+    e['id'] = str(newId)
+    e['slug'] = datetime.datetime.strftime(consts.NOW, '%B-%d-%Y').lower()
+    e['date'] = consts.NOW
+    e['title'] = 'New Entry %s'%e['id']
+    s = template.run_template_entry('empty.md', e)
 
     fn = os.path.join(consts.INDIR, str(newId) + ENTRY_SUFFIX)
     print fn
     fp = file(fn, 'w')
-    fp.write(ENTRY_HEADER%(title, slug, ds))
+    fp.write(s)
     fp.close()
 

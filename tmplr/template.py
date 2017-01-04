@@ -29,8 +29,12 @@ def run_template_tag(key, entry):
         out = cgi.escape(entry[nk])
 
     elif key.endswith('-rfc3339'):
-        nk = key[:key.find('-rfc3339')]
+        nk = key[:-len('-rfc3339')]
         out = d2s_rfc3339(entry[nk])
+
+    elif key.endswith('-datetime'):
+        nk = key[:-len('-datetime')]
+        out = d2s_dt(entry[nk])
 
     elif key == 'date' or key == 'siteTimestamp':
         out = d2s(entry[key])
