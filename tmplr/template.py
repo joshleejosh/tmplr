@@ -1,4 +1,4 @@
-import os, cgi
+import os, cgi, datetime
 import consts, entry
 from util import *
 
@@ -18,23 +18,40 @@ def setup():
 def linkify_tag(tag):
     return '<a href="tag/%s.html">%s</a>'%(tag, tag)
 
+def format_time(dt, fmt):
+    dolower = doupper = False
+    if fmt.find('%!l') != -1:
+        dolower = True
+        fmt = fmt.replace('%!l', '')
+    if fmt.find('%!u') != -1:
+        doupper = True
+        fmt = fmt.replace('%!u', '')
+    rv = datetime.datetime.strftime(dt, fmt)
+    if dolower:
+        rv = rv.lower()
+    if doupper:
+        rv = rv.upper()
+    return rv
+
 def run_template_tag(key, entry):
     out = ''
+
     if key.endswith('-stripped'):
-        nk = key[:key.find('-stripped')]
+        nk = key[:-len('-stripped')]
         out = reStrip.sub('', entry[nk])
 
     elif key.endswith('-escaped'):
-        nk = key[:key.find('-escaped')]
+        nk = key[:-len('-escaped')]
         out = cgi.escape(entry[nk])
 
     elif key.endswith('-rfc3339'):
         nk = key[:-len('-rfc3339')]
         out = d2s_rfc3339(entry[nk])
 
-    elif key.endswith('-datetime'):
-        nk = key[:-len('-datetime')]
-        out = d2s_dt(entry[nk])
+    elif key.find('-ftime:') != -1:
+        nk = key[:key.find('-ftime:')]
+        fmt = key[len(nk)+len('-ftime:'):]
+        out = format_time(entry[nk], fmt)
 
     elif key == 'date' or key == 'siteTimestamp':
         out = d2s(entry[key])
