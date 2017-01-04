@@ -1,4 +1,4 @@
-import os, os.path, datetime
+import os, datetime
 
 VERBOSE=False
 FORCE=False
@@ -15,6 +15,8 @@ OUTDIR='out'
 TEMPLATEDIR='templates'
 ASSETDIR='assets'
 
+WATCH_RATE=5
+
 # Eh, don't fiddle with these.
 ARCHIVEID=100000
 FIRSTID=100010
@@ -23,7 +25,7 @@ NOW = datetime.datetime.utcnow()
 # ############################################################ #
 
 def setup_consts(args, forceVerbose, forceForce):
-    global VERBOSE, FORCE, INDIR, OUTDIR, TEMPLATEDIR, ASSETDIR, BASEURL, TITLE, BLURB, INDEX_TITLE, ARCHIVE_TITLE, NUM_INDEX_ENTRIES
+    global VERBOSE, FORCE, INDIR, OUTDIR, TEMPLATEDIR, ASSETDIR, BASEURL, TITLE, BLURB, INDEX_TITLE, ARCHIVE_TITLE, NUM_INDEX_ENTRIES, WATCH_RATE
 
     if (args.has_key('verbose') and args['verbose']) or forceVerbose:
         VERBOSE = True
@@ -86,11 +88,15 @@ def setup_consts(args, forceVerbose, forceForce):
     if args.has_key('num_index_entries') and args['num_index_entries']:
         NUM_INDEX_ENTRIES = args['num_index_entries']
         if VERBOSE:
-            print 'num_index_entries = %s'%NUM_INDEX_ENTRIES
+            print 'num_index_entries = %d'%NUM_INDEX_ENTRIES
 
     if args.has_key('archive_title') and args['archive_title']:
         ARCHIVE_TITLE = args['archive_title']
         if VERBOSE:
             print 'archive_title = %s'%ARCHIVE_TITLE
 
+    if args.has_key('watch_rate') and args['watch_rate']:
+        WATCH_RATE = args['watch_rate']
+        if VERBOSE:
+            print 'watch_rate = %d'%WATCH_RATE
 

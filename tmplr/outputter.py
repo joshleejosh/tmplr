@@ -1,4 +1,4 @@
-import sys, os, re, datetime, cgi, optparse
+import os
 import consts, entry, template
 from util import *
 
@@ -43,7 +43,7 @@ def generate_index():
     # write a faked entry back to the input dir(!)
     fn = os.path.join(consts.INDIR, '%d.md'%consts.ARCHIVEID)
     fp = open(fn, 'w')
-    fp.write(entry.ENTRY_HEADER%(ie['title'], 'index', d2s_dt(consts.NOW), ie['blurb'], ie['tags']))
+    fp.write(entry.ENTRY_HEADER%(ie['title'], 'index', d2s_dt(consts.NOW)))
     ekeys = entry.sorted_entry_keys(entries)
     for k in ekeys[:consts.NUM_INDEX_ENTRIES]:
         e = entries[k]

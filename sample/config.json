@@ -11,5 +11,6 @@
   "blurb"             : "An example of how tmplr works.",
   "index_title"       : "Tmplr Index",
   "num_index_entries" : 5,
-  "archive_title"     : "Tmplr Archives"
+  "archive_title"     : "Tmplr Archives",
+  "watch_rate"        : 3
 }

@@ -1,4 +1,4 @@
-import datetime, re, os.path
+import datetime, re, os
 
 def s2d(s):
     return datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S')

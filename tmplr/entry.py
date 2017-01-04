@@ -1,4 +1,4 @@
-import os, copy, markdown
+import os, copy, markdown, collections
 import consts
 from util import *
 
@@ -17,7 +17,8 @@ def setup():
 
 """ Create an initialized entry dict """
 def empty_entry():
-    return {
+    rv = collections.defaultdict(str)
+    rv.update({
         'id':consts.FIRSTID,
         'title': '',
         'slug': '',
@@ -31,7 +32,8 @@ def empty_entry():
         'siteTimestamp': consts.NOW,
         'baseurl':consts.BASEURL,
         'editTimestamp':consts.NOW,
-    }
+    })
+    return rv
 
 # ############################################################# #
 
@@ -77,7 +79,7 @@ def read_entry(fn):
 def sorted_entry_keys(entries):
     out = entries.keys()
     out.sort()
-    out.reverse()
+    #out.reverse()
     return out;
 
 def read_tags(entry):
@@ -100,8 +102,11 @@ def get_entries():
 ENTRY_HEADER = """title: %s
 slug: %s
 date: %s
-blurb: %s
-tags: %s
+byline: 
+projdate: 
+projurl: 
+projlink: 
+
 
 """
 
@@ -123,6 +128,6 @@ def new_entry():
     fn = os.path.join(consts.INDIR, str(newId) + ENTRY_SUFFIX)
     print fn
     fp = file(fn, 'w')
-    fp.write(ENTRY_HEADER%(title, slug, ds, blurb, tags))
+    fp.write(ENTRY_HEADER%(title, slug, ds))
     fp.close()
 

@@ -1,4 +1,4 @@
-import consts, helpers, outputter, entry, template
+import consts, helpers, outputter, entry, template, watcher
 
 def configure(args, v, f):
     consts.setup_consts(args, v, f)
@@ -19,6 +19,9 @@ def run(command):
     elif command == 'BUILD':
         outputter.regenerate()
         helpers.copy_assets()
+
+    elif command == 'WATCH':
+        watcher.watch()
 
     else:
         print 'Invalid command [%s]'%arg
