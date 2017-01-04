@@ -79,7 +79,8 @@ def read_entry(fn):
 def sorted_entry_keys(entries):
     out = entries.keys()
     out.sort()
-    #out.reverse()
+    if consts.INDEX_REVERSE_TIME:
+        out.reverse()
     return out;
 
 def read_tags(entry):

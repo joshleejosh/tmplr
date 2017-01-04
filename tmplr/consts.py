@@ -9,6 +9,7 @@ BLURB='yet another static site generator'
 INDEX_TITLE = 'tmplr index'
 ARCHIVE_TITLE = 'tmplr archives'
 NUM_INDEX_ENTRIES = 7
+INDEX_REVERSE_TIME = True
 
 INDIR='in'
 OUTDIR='out'
@@ -25,7 +26,7 @@ NOW = datetime.datetime.utcnow()
 # ############################################################ #
 
 def setup_consts(args, forceVerbose, forceForce):
-    global VERBOSE, FORCE, INDIR, OUTDIR, TEMPLATEDIR, ASSETDIR, BASEURL, TITLE, BLURB, INDEX_TITLE, ARCHIVE_TITLE, NUM_INDEX_ENTRIES, WATCH_RATE
+    global VERBOSE, FORCE, INDIR, OUTDIR, TEMPLATEDIR, ASSETDIR, BASEURL, TITLE, BLURB, INDEX_TITLE, ARCHIVE_TITLE, NUM_INDEX_ENTRIES, INDEX_REVERSE_TIME, WATCH_RATE
 
     if (args.has_key('verbose') and args['verbose']) or forceVerbose:
         VERBOSE = True
@@ -89,6 +90,11 @@ def setup_consts(args, forceVerbose, forceForce):
         NUM_INDEX_ENTRIES = args['num_index_entries']
         if VERBOSE:
             print 'num_index_entries = %d'%NUM_INDEX_ENTRIES
+
+    if args.has_key('index_reverse_time'):
+        INDEX_REVERSE_TIME = args['index_reverse_time']
+        if VERBOSE:
+            print 'index_reverse_time = %s'%INDEX_REVERSE_TIME
 
     if args.has_key('archive_title') and args['archive_title']:
         ARCHIVE_TITLE = args['archive_title']
