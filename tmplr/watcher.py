@@ -3,7 +3,7 @@ import consts, bootstrap
 from util import *
 
 def watch():
-    print 'Watching for changes in %s every %d seconds...'%(consts.INDIR, consts.WATCH_RATE)
+    print ('Watching for changes in %s every %d seconds...'%(consts.INDIR, consts.WATCH_RATE))
     try:
         trigger = False
         times = collections.defaultdict(float)
@@ -15,7 +15,7 @@ def watch():
                     continue
                 ts = os.path.getmtime(os.path.join(consts.INDIR, fn))
                 if ts != times[fn]:
-                    print 'Changed [%s] [%s]'%(fn, time.strftime('%Y/%m/%d %H:%M:%S', time.localtime(ts)))
+                    print ('Changed [%s] [%s]'%(fn, time.strftime('%Y/%m/%d %H:%M:%S', time.localtime(ts))))
                     times[fn] = ts
                     trigger = True
             if trigger:
@@ -23,6 +23,6 @@ def watch():
                 trigger = False
             time.sleep(consts.WATCH_RATE)
     except KeyboardInterrupt:
-        print 'Done watching. Goodbye.'
+        print ('Done watching. Goodbye.')
         pass
 

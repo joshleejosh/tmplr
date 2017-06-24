@@ -46,38 +46,36 @@ def parse_tags(ins):
     return out
 
 def read_entry(fn):
-    fp = open(fn)
-    inHead = True
     oute = empty_entry()
-    oute['id'] = path2id(fn)
-    oute['editTimestamp'] = os.path.getmtime(fn)
-    for line in fp.readlines():
-        if not inHead:
-            oute['body'] += line
-        else:
-            line = line.strip()
-            if (line == ''):
-                inHead = False
+    with open(fn) as fp:
+        inHead = True
+        oute['id'] = path2id(fn)
+        oute['editTimestamp'] = os.path.getmtime(fn)
+        for line in fp.readlines():
+            if not inHead:
+                oute['body'] += line
             else:
-                a = line.split(':')
-                k = a[0].strip()
-                v = ':'.join(a[1:]).strip()
-
-                if k == 'date':
-                    oute[k] = s2d(v)
-                elif k == 'tags':
-                    oute[k] = parse_tags(v)
+                line = line.strip()
+                if (line == ''):
+                    inHead = False
                 else:
-                    oute[k] = v
+                    a = line.split(':')
+                    k = a[0].strip()
+                    v = ':'.join(a[1:]).strip()
 
-    oute['url'] = '' + oute['slug'] + '.html'
-    oute['body'] = oute['body'].decode('utf-8').encode('ascii', 'xmlcharrefreplace')
-    oute['body'] = markdown.markdown(oute['body'], extensions=('markdown.extensions.smarty',))
+                    if k == 'date':
+                        oute[k] = s2d(v)
+                    elif k == 'tags':
+                        oute[k] = parse_tags(v)
+                    else:
+                        oute[k] = v
 
+        oute['url'] = '' + oute['slug'] + '.html'
+        oute['body'] = markdown.markdown(oute['body'], extensions=('markdown.extensions.smarty',))
     return oute
 
 def sorted_entry_keys(entries):
-    out = entries.keys()
+    out = list(entries.keys())
     out.sort()
     if consts.INDEX_REVERSE_TIME:
         out.reverse()
@@ -92,7 +90,7 @@ def read_tags(entry):
 
 def get_entries():
     rv = {}
-    for eid,entry in gEntries.iteritems():
+    for eid,entry in gEntries.items():
         if entry['date'] <= consts.NOW:
             newe = copy.deepcopy(entry)
             rv[newe['id']] = newe
@@ -103,7 +101,7 @@ def get_entries():
 # Create a new entry file in INDIR
 def new_entry():
     newId = consts.FIRSTID
-    for e in gEntries.iterkeys():
+    for e in gEntries.keys():
         if int(e) > newId:
             newId = int(e)
     newId += 1
@@ -116,8 +114,7 @@ def new_entry():
     s = template.run_template_entry('empty.md', e)
 
     fn = os.path.join(consts.INDIR, str(newId) + ENTRY_SUFFIX)
-    print fn
-    fp = file(fn, 'w')
-    fp.write(s)
-    fp.close()
+    print (fn)
+    with open(fn, 'w') as fp:
+        fp.write(s)
 

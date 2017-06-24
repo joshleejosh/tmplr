@@ -19,7 +19,7 @@ def clean_output():
         if fslug == 'archive' or fslug == 'index':
             continue
         hit = False
-        for id,e in entry.get_entries().iteritems():
+        for id,e in entry.get_entries().items():
             if fslug == e['slug']:
                 hit = True
                 break
@@ -27,6 +27,6 @@ def clean_output():
             todel.append(fn)
 
     for fn in todel:
-        print 'Deleting stray file %s'%fn
+        print ('Deleting stray file %s'%fn)
         os.remove(fn)
 

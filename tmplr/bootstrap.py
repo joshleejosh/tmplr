@@ -9,11 +9,11 @@ def run(command):
     template.setup()
 
     if command == 'CLEAN':
-        print 'Clean stray files out of output dir %s'%consts.OUTDIR
+        print('Clean stray files out of output dir %s'%consts.OUTDIR)
         helpers.clean_output()
 
     elif command == 'NEW':
-        #print 'Create a new entry in note dir %s'%consts.INDIR
+        #print('Create a new entry in note dir %s'%consts.INDIR)
         entry.new_entry()
 
     elif command == 'BUILD':
@@ -24,5 +24,5 @@ def run(command):
         watcher.watch()
 
     else:
-        print 'Invalid command [%s]'%arg
+        print('Invalid command [%s]'%arg)
 
