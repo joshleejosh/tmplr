@@ -1,6 +1,6 @@
 import os, copy, markdown, collections
-import consts, template
-from util import *
+import tmplr.consts, tmplr.template
+from tmplr.util import *
 
 ENTRY_SUFFIX = '.md'
 gEntries = {}
@@ -9,9 +9,9 @@ gTags = {}
 def setup():
     gEntries.clear();
     gTags.clear()
-    for fn in os.listdir(consts.INDIR):
-        e = read_entry(os.path.join(consts.INDIR, fn))
-        if e['id'] != str(consts.ARCHIVEID):
+    for fn in os.listdir(tmplr.consts.INDIR):
+        e = read_entry(os.path.join(tmplr.consts.INDIR, fn))
+        if e['id'] != str(tmplr.consts.ARCHIVEID):
             gEntries[e['id']] = e
             read_tags(e)
 
@@ -19,19 +19,19 @@ def setup():
 def empty_entry():
     rv = collections.defaultdict(str)
     rv.update({
-        'id':str(consts.FIRSTID),
+        'id':str(tmplr.consts.FIRSTID),
         'title': '',
         'slug': '',
         'blurb': '',
-        'date': consts.NOW,
+        'date': tmplr.consts.NOW,
         'body':'',
         'tags':[],
         'url':'',
-        'siteTitle':consts.TITLE,
-        'siteBlurb':consts.BLURB,
-        'siteTimestamp': consts.NOW,
-        'baseurl':consts.BASEURL,
-        'editTimestamp':consts.NOW,
+        'siteTitle':tmplr.consts.TITLE,
+        'siteBlurb':tmplr.consts.BLURB,
+        'siteTimestamp': tmplr.consts.NOW,
+        'baseurl':tmplr.consts.BASEURL,
+        'editTimestamp':tmplr.consts.NOW,
     })
     return rv
 
@@ -77,7 +77,7 @@ def read_entry(fn):
 def sorted_entry_keys(entries):
     out = list(entries.keys())
     out.sort()
-    if consts.INDEX_REVERSE_TIME:
+    if tmplr.consts.INDEX_REVERSE_TIME:
         out.reverse()
     return out;
 
@@ -91,7 +91,7 @@ def read_tags(entry):
 def get_entries():
     rv = {}
     for eid,entry in gEntries.items():
-        if entry['date'] <= consts.NOW:
+        if entry['date'] <= tmplr.consts.NOW:
             newe = copy.deepcopy(entry)
             rv[newe['id']] = newe
     return rv;
@@ -100,7 +100,7 @@ def get_entries():
 
 # Create a new entry file in INDIR
 def new_entry():
-    newId = consts.FIRSTID
+    newId = tmplr.consts.FIRSTID
     for e in gEntries.keys():
         if int(e) > newId:
             newId = int(e)
@@ -108,12 +108,12 @@ def new_entry():
 
     e = empty_entry()
     e['id'] = str(newId)
-    e['slug'] = datetime.datetime.strftime(consts.NOW, '%B-%d-%Y').lower()
-    e['date'] = consts.NOW
+    e['slug'] = datetime.datetime.strftime(tmplr.consts.NOW, '%B-%d-%Y').lower()
+    e['date'] = tmplr.consts.NOW
     e['title'] = 'New Entry %s'%e['id']
-    s = template.run_template_entry('empty.md', e)
+    s = tmplr.template.run_template_entry('empty.md', e)
 
-    fn = os.path.join(consts.INDIR, str(newId) + ENTRY_SUFFIX)
+    fn = os.path.join(tmplr.consts.INDIR, str(newId) + ENTRY_SUFFIX)
     print (fn)
     with open(fn, 'w') as fp:
         fp.write(s)

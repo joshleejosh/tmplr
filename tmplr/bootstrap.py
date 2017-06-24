@@ -1,27 +1,27 @@
-import consts, helpers, outputter, entry, template, watcher
+import tmplr.consts, tmplr.helpers, tmplr.outputter, tmplr.entry, tmplr.template, tmplr.watcher
 
 def configure(args, v, f):
-    consts.setup_consts(args, v, f)
+    tmplr.consts.setup_consts(args, v, f)
 
 # Assumes configure() has been called.
 def run(command):
-    entry.setup()
-    template.setup()
+    tmplr.entry.setup()
+    tmplr.template.setup()
 
     if command == 'CLEAN':
-        print('Clean stray files out of output dir %s'%consts.OUTDIR)
-        helpers.clean_output()
+        print('Clean stray files out of output dir %s'%tmplr.consts.OUTDIR)
+        tmplr.helpers.clean_output()
 
     elif command == 'NEW':
-        #print('Create a new entry in note dir %s'%consts.INDIR)
-        entry.new_entry()
+        #print('Create a new entry in note dir %s'%tmplr.consts.INDIR)
+        tmplr.entry.new_entry()
 
     elif command == 'BUILD':
-        outputter.regenerate()
-        helpers.copy_assets()
+        tmplr.outputter.regenerate()
+        tmplr.helpers.copy_assets()
 
     elif command == 'WATCH':
-        watcher.watch()
+        tmplr.watcher.watch()
 
     else:
         print('Invalid command [%s]'%arg)

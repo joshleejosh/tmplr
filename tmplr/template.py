@@ -1,6 +1,6 @@
 import os, cgi, datetime
-import consts, entry
-from util import *
+import tmplr.consts, tmplr.entry
+from tmplr.util import *
 
 reStrip = re.compile('<[^>]*>')
 reTemplateTag = re.compile('\<@([^@]+)@\>')
@@ -9,8 +9,8 @@ gTemplates = {}
 
 def setup():
     gTemplates.clear()
-    for fn in os.listdir(consts.TEMPLATEDIR):
-        tm = read_template(os.path.join(consts.TEMPLATEDIR, fn))
+    for fn in os.listdir(tmplr.consts.TEMPLATEDIR):
+        tm = read_template(os.path.join(tmplr.consts.TEMPLATEDIR, fn))
         gTemplates[tm['id']] = tm
 
 # ############################################################# #
@@ -72,7 +72,7 @@ def run_template_entry(tk, en):
     return s
 
 def run_template_loop(tk, baseEntry, entries, numToDo=-1):
-    ekeys = entry.sorted_entry_keys(entries)
+    ekeys = tmplr.entry.sorted_entry_keys(entries)
     if numToDo == -1:
         numToDo = len(ekeys)
     tm = gTemplates[tk]

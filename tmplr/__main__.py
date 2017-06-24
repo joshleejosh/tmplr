@@ -1,5 +1,5 @@
 import argparse, json
-import bootstrap, consts, helpers, outputter, entry, template
+import tmplr.bootstrap, tmplr.consts, tmplr.helpers, tmplr.outputter, tmplr.entry, tmplr.template
 
 # ###################################################################### #
 # ###################################################################### #
@@ -18,6 +18,6 @@ if __name__ == "__main__":
     with open(args.config) as fp:
         config = json.load(fp)
 
-    bootstrap.configure(config, args.verbose, args.force)
-    bootstrap.run(args.command.upper())
+    tmplr.bootstrap.configure(config, args.verbose, args.force)
+    tmplr.bootstrap.run(args.command.upper())
 
