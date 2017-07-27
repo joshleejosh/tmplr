@@ -1,0 +1,15 @@
+setup.cfg
+tmplr/__init__.py
+tmplr/__main__.py
+tmplr/bootstrap.py
+tmplr/consts.py
+tmplr/entry.py
+tmplr/helpers.py
+tmplr/outputter.py
+tmplr/template.py
+tmplr/util.py
+tmplr/watcher.py
+tmplr.egg-info/PKG-INFO
+tmplr.egg-info/SOURCES.txt
+tmplr.egg-info/dependency_links.txt
+tmplr.egg-info/top_level.txt

@@ -1,17 +1,18 @@
-import os, cgi, datetime
-import tmplr.consts, tmplr.entry
-from tmplr.util import *
+# -*- coding: utf-8 -*-
+import os, cgi, datetime, re
+from . import consts, entry
+from .util import d2s_rfc3339, d2s
 
-reStrip = re.compile('<[^>]*>')
-reTemplateTag = re.compile('\<@([^@]+)@\>')
+RE_STRIP = re.compile(r'<[^>]*>')
+RE_TEMPLATE_TAG = re.compile(r'\<@([^@]+)@\>')
 
-gTemplates = {}
+G_TEMPLATES = {}
 
 def setup():
-    gTemplates.clear()
-    for fn in os.listdir(tmplr.consts.TEMPLATEDIR):
-        tm = read_template(os.path.join(tmplr.consts.TEMPLATEDIR, fn))
-        gTemplates[tm['id']] = tm
+    G_TEMPLATES.clear()
+    for fn in os.listdir(consts.TEMPLATEDIR):
+        tm = read_template(os.path.join(consts.TEMPLATEDIR, fn))
+        G_TEMPLATES[tm['id']] = tm
 
 # ############################################################# #
 
@@ -33,59 +34,59 @@ def format_time(dt, fmt):
         rv = rv.upper()
     return rv
 
-def run_template_tag(key, entry):
+def run_template_tag(key, ent):
     out = ''
 
     if key.endswith('-stripped'):
         nk = key[:-len('-stripped')]
-        out = reStrip.sub('', entry[nk])
+        out = RE_STRIP.sub('', ent[nk])
 
     elif key.endswith('-escaped'):
         nk = key[:-len('-escaped')]
-        out = cgi.escape(entry[nk])
+        out = cgi.escape(ent[nk])
 
     elif key.endswith('-rfc3339'):
         nk = key[:-len('-rfc3339')]
-        out = d2s_rfc3339(entry[nk])
+        out = d2s_rfc3339(ent[nk])
 
     elif key.find('-ftime:') != -1:
         nk = key[:key.find('-ftime:')]
         fmt = key[len(nk)+len('-ftime:'):]
-        out = format_time(entry[nk], fmt)
+        out = format_time(ent[nk], fmt)
 
     elif key == 'date' or key == 'siteTimestamp':
-        out = d2s(entry[key])
+        out = d2s(ent[key])
 
     elif key == 'tags':
-        out = ', '.join(map(linkify_tag, entry[key]))
+        out = ', '.join(map(linkify_tag, ent[key]))
 
     else:
-        out = entry[key]
+        out = ent[key]
     return out
 
 def run_template_entry(tk, en):
-    tm = gTemplates[tk]
+    tm = G_TEMPLATES[tk]
     s = tm['template']
-    for i in reTemplateTag.findall(s):
+    for i in RE_TEMPLATE_TAG.findall(s):
         nv = run_template_tag(i, en)
-        s = re.sub('\<@'+i+'@\>', nv, s)
+        s = re.sub(r'\<@' + i + r'@\>', nv, s)
     return s
 
-def run_template_loop(tk, baseEntry, entries, numToDo=-1):
-    ekeys = tmplr.entry.sorted_entry_keys(entries)
-    if numToDo == -1:
-        numToDo = len(ekeys)
-    tm = gTemplates[tk]
+def run_template_loop(tk, baseent, entries, numtodo=-1):
+    ekeys = entry.sorted_entry_keys(entries)
+    if numtodo == -1:
+        numtodo = len(ekeys)
+    tm = G_TEMPLATES[tk]
     s = tm['template']
-    for i in reTemplateTag.findall(s):
+    for i in RE_TEMPLATE_TAG.findall(s):
         nv = ''
         if i.startswith('loopentries-'):
             k = i[len('loopentries-'):]
-            for key in ekeys[:numToDo]:
+            for key in ekeys[:numtodo]:
                 nv += run_template_entry(k, entries[key]) + '\n'
         else:
-            nv = run_template_tag(i, baseEntry)
-        s = re.sub('\<@'+i+'@\>', nv, s)
+            nv = run_template_tag(i, baseent)
+        s = re.sub(r'\<@' + i + r'@\>', nv, s)
     return s
 
 def read_template(fn):

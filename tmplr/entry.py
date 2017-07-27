@@ -1,37 +1,43 @@
-import os, copy, markdown, collections
-import tmplr.consts, tmplr.template
-from tmplr.util import *
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from builtins import open
+import os, copy, collections
+import markdown
+from . import consts
+from .util import path2id, s2d
 
 ENTRY_SUFFIX = '.md'
 gEntries = {}
 gTags = {}
 
 def setup():
-    gEntries.clear();
+    gEntries.clear()
     gTags.clear()
-    for fn in os.listdir(tmplr.consts.INDIR):
-        e = read_entry(os.path.join(tmplr.consts.INDIR, fn))
-        if e['id'] != str(tmplr.consts.ARCHIVEID):
+    for fn in os.listdir(consts.INDIR):
+        e = read_entry(os.path.join(consts.INDIR, fn))
+        if e['id'] != str(consts.ARCHIVEID):
             gEntries[e['id']] = e
             read_tags(e)
 
-""" Create an initialized entry dict """
 def empty_entry():
+    """
+    Create an initialized entry dict
+    """
     rv = collections.defaultdict(str)
     rv.update({
-        'id':str(tmplr.consts.FIRSTID),
+        'id':str(consts.FIRSTID),
         'title': '',
         'slug': '',
         'blurb': '',
-        'date': tmplr.consts.NOW,
+        'date': consts.NOW,
         'body':'',
         'tags':[],
         'url':'',
-        'siteTitle':tmplr.consts.TITLE,
-        'siteBlurb':tmplr.consts.BLURB,
-        'siteTimestamp': tmplr.consts.NOW,
-        'baseurl':tmplr.consts.BASEURL,
-        'editTimestamp':tmplr.consts.NOW,
+        'siteTitle':consts.TITLE,
+        'siteBlurb':consts.BLURB,
+        'siteTimestamp': consts.NOW,
+        'baseurl':consts.BASEURL,
+        'editTimestamp':consts.NOW,
     })
     return rv
 
@@ -47,17 +53,17 @@ def parse_tags(ins):
 
 def read_entry(fn):
     oute = empty_entry()
-    with open(fn) as fp:
-        inHead = True
+    with open(fn, encoding='utf-8') as fp:
+        inhead = True
         oute['id'] = path2id(fn)
         oute['editTimestamp'] = os.path.getmtime(fn)
         for line in fp.readlines():
-            if not inHead:
+            if not inhead:
                 oute['body'] += line
             else:
                 line = line.strip()
-                if (line == ''):
-                    inHead = False
+                if not line:
+                    inhead = False
                 else:
                     a = line.split(':')
                     k = a[0].strip()
@@ -77,9 +83,9 @@ def read_entry(fn):
 def sorted_entry_keys(entries):
     out = list(entries.keys())
     out.sort()
-    if tmplr.consts.INDEX_REVERSE_TIME:
+    if consts.INDEX_REVERSE_TIME:
         out.reverse()
-    return out;
+    return out
 
 def read_tags(entry):
     for tag in entry['tags']:
@@ -90,31 +96,9 @@ def read_tags(entry):
 
 def get_entries():
     rv = {}
-    for eid,entry in gEntries.items():
-        if entry['date'] <= tmplr.consts.NOW:
-            newe = copy.deepcopy(entry)
+    for ent in gEntries.values():
+        if ent['date'] <= consts.NOW:
+            newe = copy.deepcopy(ent)
             rv[newe['id']] = newe
-    return rv;
-
-# ############################################################# #
-
-# Create a new entry file in INDIR
-def new_entry():
-    newId = tmplr.consts.FIRSTID
-    for e in gEntries.keys():
-        if int(e) > newId:
-            newId = int(e)
-    newId += 1
-
-    e = empty_entry()
-    e['id'] = str(newId)
-    e['slug'] = datetime.datetime.strftime(tmplr.consts.NOW, '%B-%d-%Y').lower()
-    e['date'] = tmplr.consts.NOW
-    e['title'] = 'New Entry %s'%e['id']
-    s = tmplr.template.run_template_entry('empty.md', e)
-
-    fn = os.path.join(tmplr.consts.INDIR, str(newId) + ENTRY_SUFFIX)
-    print (fn)
-    with open(fn, 'w') as fp:
-        fp.write(s)
+    return rv
 
