@@ -1,8 +1,19 @@
 # -*- coding: utf-8 -*-
-import os, shutil, glob, re
-from . import entry, consts
+"""
+Misc. high-level functions.
+"""
+
+import os
+import shutil
+import glob
+import re
+import datetime
+from . import consts, entry, template
 
 def copy_assets():
+    """
+    Copy assets to the output dir.
+    """
     for f in glob.glob(os.path.join(consts.ASSETDIR, '*')):
         if not os.path.isdir(f):
             shutil.copy(f, consts.OUTDIR)
@@ -32,20 +43,20 @@ def new_entry():
     """
     Create a new entry file in INDIR
     """
-    newId = consts.FIRSTID
-    for e in gEntries:
-        if int(e) > newId:
-            newId = int(e)
-    newId += 1
+    newid = consts.FIRSTID
+    for e in entry.G_ENTRIES:
+        if int(e) > newid:
+            newid = int(e)
+    newid += 1
 
-    e = empty_entry()
-    e['id'] = str(newId)
+    e = entry.empty_entry()
+    e['id'] = str(newid)
     e['slug'] = datetime.datetime.strftime(consts.NOW, '%B-%d-%Y').lower()
     e['date'] = consts.NOW
     e['title'] = 'New Entry %s'%e['id']
     s = template.run_template_entry('empty.md', e)
 
-    fn = os.path.join(consts.INDIR, str(newId) + ENTRY_SUFFIX)
+    fn = os.path.join(consts.INDIR, str(newid) + entry.ENTRY_SUFFIX)
     print(fn)
     with open(fn, 'w') as fp:
         fp.write(s)

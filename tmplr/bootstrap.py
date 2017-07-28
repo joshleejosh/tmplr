@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
+"""
+Command processing.
+"""
+
 from . import consts, helpers, outputter, entry, template, watcher
 
 def configure(args, v, f):
+    """
+    Set up globals in `consts` from command line args.
+    """
     consts.setup_consts(args, v, f)
 
-# Assumes configure() has been called.
 def run(command):
+    """
+    Run the given command based on the current configuration.
+    """
     entry.setup()
     template.setup()
 

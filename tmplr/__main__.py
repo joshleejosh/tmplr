@@ -3,7 +3,8 @@
 Yet another static site generator.
 """
 
-import argparse, json
+import argparse
+import json
 from . import bootstrap
 
 # ###################################################################### #
@@ -11,6 +12,9 @@ from . import bootstrap
 # ###################################################################### #
 
 def main():
+    """
+    Process command-line args and call bootstrap.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('config', help='path to config file')
     parser.add_argument('command', help='new|build|watch|clean')

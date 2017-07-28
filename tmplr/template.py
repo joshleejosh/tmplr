@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
-import os, cgi, datetime, re
+"""
+Template management and processing.
+"""
+
+import os
+import cgi
+import datetime
+import re
 from . import consts, entry
 from .util import d2s_rfc3339, d2s
 
@@ -9,17 +16,20 @@ RE_TEMPLATE_TAG = re.compile(r'\<@([^@]+)@\>')
 G_TEMPLATES = {}
 
 def setup():
+    """
+    Load templates for later access.
+    """
     G_TEMPLATES.clear()
     for fn in os.listdir(consts.TEMPLATEDIR):
-        tm = read_template(os.path.join(consts.TEMPLATEDIR, fn))
+        tm = _read_template(os.path.join(consts.TEMPLATEDIR, fn))
         G_TEMPLATES[tm['id']] = tm
 
 # ############################################################# #
 
-def linkify_tag(tag):
+def _linkify_tag(tag):
     return '<a href="tag/%s.html">%s</a>'%(tag, tag)
 
-def format_time(dt, fmt):
+def _format_time(dt, fmt):
     dolower = doupper = False
     if fmt.find('%!l') != -1:
         dolower = True
@@ -34,7 +44,7 @@ def format_time(dt, fmt):
         rv = rv.upper()
     return rv
 
-def run_template_tag(key, ent):
+def _run_template_tag(key, ent):
     out = ''
 
     if key.endswith('-stripped'):
@@ -52,27 +62,33 @@ def run_template_tag(key, ent):
     elif key.find('-ftime:') != -1:
         nk = key[:key.find('-ftime:')]
         fmt = key[len(nk)+len('-ftime:'):]
-        out = format_time(ent[nk], fmt)
+        out = _format_time(ent[nk], fmt)
 
     elif key == 'date' or key == 'siteTimestamp':
         out = d2s(ent[key])
 
     elif key == 'tags':
-        out = ', '.join(map(linkify_tag, ent[key]))
+        out = ', '.join(map(_linkify_tag, ent[key]))
 
     else:
         out = ent[key]
     return out
 
 def run_template_entry(tk, en):
+    """
+    Process a template on an entry.
+    """
     tm = G_TEMPLATES[tk]
     s = tm['template']
     for i in RE_TEMPLATE_TAG.findall(s):
-        nv = run_template_tag(i, en)
+        nv = _run_template_tag(i, en)
         s = re.sub(r'\<@' + i + r'@\>', nv, s)
     return s
 
 def run_template_loop(tk, baseent, entries, numtodo=-1):
+    """
+    Process a template on a collection of entries.
+    """
     ekeys = entry.sorted_entry_keys(entries)
     if numtodo == -1:
         numtodo = len(ekeys)
@@ -85,11 +101,11 @@ def run_template_loop(tk, baseent, entries, numtodo=-1):
             for key in ekeys[:numtodo]:
                 nv += run_template_entry(k, entries[key]) + '\n'
         else:
-            nv = run_template_tag(i, baseent)
+            nv = _run_template_tag(i, baseent)
         s = re.sub(r'\<@' + i + r'@\>', nv, s)
     return s
 
-def read_template(fn):
+def _read_template(fn):
     s = ''
     with open(fn) as fp:
         s = fp.read()

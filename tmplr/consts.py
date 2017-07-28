@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-import os, datetime
+"""
+Consts driven by the config file.
+"""
+
+import os
+import datetime
 
 VERBOSE = False
 FORCE = False
@@ -27,7 +32,12 @@ NOW = datetime.datetime.utcnow()
 # ############################################################ #
 
 def setup_consts(args, forceverbose, forceforce):
-    global VERBOSE, FORCE, INDIR, OUTDIR, TEMPLATEDIR, ASSETDIR, BASEURL, TITLE, BLURB, INDEX_TITLE, ARCHIVE_TITLE, NUM_INDEX_ENTRIES, INDEX_REVERSE_TIME, WATCH_RATE
+    """
+    Set consts based on the given command-line args.
+    """
+    global VERBOSE, FORCE, INDIR, OUTDIR, TEMPLATEDIR, ASSETDIR, BASEURL, \
+            TITLE, BLURB, INDEX_TITLE, ARCHIVE_TITLE, NUM_INDEX_ENTRIES, \
+            INDEX_REVERSE_TIME, WATCH_RATE
 
     if ('verbose' in args and args['verbose']) or forceverbose:
         VERBOSE = True

@@ -1,8 +1,17 @@
 # -*- coding: utf-8 -*-
-import os, time, collections
+"""
+Watch for changes in any entry files and regenerate.
+"""
+
+import os
+import time
+import collections
 from . import consts, outputter, helpers
 
 def watch():
+    """
+    Watch for changes in any entry files and regenerate.
+    """
     print('Watching for changes in %s every %d seconds...'%(consts.INDIR, consts.WATCH_RATE))
     try:
         trigger = False
@@ -15,7 +24,9 @@ def watch():
                     continue
                 ts = os.path.getmtime(os.path.join(consts.INDIR, fn))
                 if ts != times[fn]:
-                    print('Changed [%s] [%s]'%(fn, time.strftime('%Y/%m/%d %H:%M:%S', time.localtime(ts))))
+                    print('Changed [%s] [%s]'%(fn,
+                                               time.strftime('%Y/%m/%d %H:%M:%S',
+                                                             time.localtime(ts))))
                     times[fn] = ts
                     trigger = True
             if trigger:

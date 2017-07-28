@@ -1,27 +1,36 @@
 # -*- coding: utf-8 -*-
+"""
+Base entry handling.
+"""
+
 from __future__ import unicode_literals
 from builtins import open
-import os, copy, collections
+import os
+import copy
+import collections
 import markdown
 from . import consts
 from .util import path2id, s2d
 
 ENTRY_SUFFIX = '.md'
-gEntries = {}
-gTags = {}
+G_ENTRIES = {}
+G_TAGS = {}
 
 def setup():
-    gEntries.clear()
-    gTags.clear()
+    """
+    Load all entries from the input directory and initialize the global catalog.
+    """
+    G_ENTRIES.clear()
+    G_TAGS.clear()
     for fn in os.listdir(consts.INDIR):
         e = read_entry(os.path.join(consts.INDIR, fn))
         if e['id'] != str(consts.ARCHIVEID):
-            gEntries[e['id']] = e
-            read_tags(e)
+            G_ENTRIES[e['id']] = e
+            _read_tags(e)
 
 def empty_entry():
     """
-    Create an initialized entry dict
+    Create an initialized entry dict.
     """
     rv = collections.defaultdict(str)
     rv.update({
@@ -43,7 +52,7 @@ def empty_entry():
 
 # ############################################################# #
 
-def parse_tags(ins):
+def _parse_tags(ins):
     out = []
     for s in ins.split(','):
         s = s.strip().lower()
@@ -52,6 +61,9 @@ def parse_tags(ins):
     return out
 
 def read_entry(fn):
+    """
+    Create an entry object from the given file.
+    """
     oute = empty_entry()
     with open(fn, encoding='utf-8') as fp:
         inhead = True
@@ -72,7 +84,7 @@ def read_entry(fn):
                     if k == 'date':
                         oute[k] = s2d(v)
                     elif k == 'tags':
-                        oute[k] = parse_tags(v)
+                        oute[k] = _parse_tags(v)
                     else:
                         oute[k] = v
 
@@ -81,22 +93,31 @@ def read_entry(fn):
     return oute
 
 def sorted_entry_keys(entries):
+    """
+    Sort entry IDs from the global catalog.
+    """
     out = list(entries.keys())
     out.sort()
     if consts.INDEX_REVERSE_TIME:
         out.reverse()
     return out
 
-def read_tags(entry):
+def _read_tags(entry):
+    """
+    Read tags from an entry and add them to the global catalog.
+    """
     for tag in entry['tags']:
-        if tag not in gTags.keys():
-            gTags[tag] = [entry['id'],]
+        if tag not in G_TAGS.keys():
+            G_TAGS[tag] = [entry['id'],]
         else:
-            gTags[tag].append(entry['id'])
+            G_TAGS[tag].append(entry['id'])
 
 def get_entries():
+    """
+    Get all past and present entries. Exclude postdated entries.
+    """
     rv = {}
-    for ent in gEntries.values():
+    for ent in G_ENTRIES.values():
         if ent['date'] <= consts.NOW:
             newe = copy.deepcopy(ent)
             rv[newe['id']] = newe

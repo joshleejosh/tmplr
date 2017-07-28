@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
+"""
+The part where we actually generate the pages.
+"""
+
 import os
 from . import consts, entry, template
 from .util import s2d
 
 
-# ###################################################################### #
-# ###################################################################### #
-# ###################################################################### #
-
 def generate_entries():
+    """
+    Generate individual entry pages.
+    """
     out = 0
     for iid, e in entry.get_entries().items():
         fn = os.path.join(consts.OUTDIR, e['slug'] + '.html')
@@ -27,6 +30,9 @@ def generate_entries():
     return out
 
 def generate_index():
+    """
+    Generate the index page.
+    """
     print('Generate index')
     entries = entry.get_entries()
     fn = os.path.join(consts.OUTDIR, 'index.html')
@@ -41,15 +47,17 @@ def generate_index():
     # write a faked entry back to the input dir(!)
     fn = os.path.join(consts.INDIR, '%d.md'%consts.ARCHIVEID)
     with open(fn, 'w') as fp:
-        s = template.run_template_entry('empty.md', ie)
+        template.run_template_entry('empty.md', ie)
         ekeys = entry.sorted_entry_keys(entries)
         for k in ekeys[:consts.NUM_INDEX_ENTRIES]:
             e = entries[k]
             url = '%s/%s.html'%(consts.BASEURL, e['slug'])
             fp.write('<a href="%s">%s</a>\n\n'%(url, e['title']))
 
-# create a meta-entry with links to all other entries.
 def generate_archive_entry():
+    """
+    Create a meta-entry with links to all other entries.
+    """
     aeid = consts.ARCHIVEID
     print('Generate archive as entry %d'%aeid)
     oute = entry.empty_entry()
@@ -67,6 +75,9 @@ def generate_archive_entry():
     entries[oute['id']] = oute
 
 def generate_archive():
+    """
+    Generate the archive page.
+    """
     print('Generate archive')
     fn = os.path.join(consts.OUTDIR, 'archive.html')
     with open(fn, 'w') as fp:
@@ -78,17 +89,25 @@ def generate_archive():
         fp.write(template.run_template_entry('htmlFoot.html', ie))
 
 def generate_feed():
+    """
+    Generate the site rss/atom feed.
+    """
     print('Generate feed')
     fn = os.path.join(consts.OUTDIR, 'feed.xml')
     with open(fn, 'w') as fp:
         ie = entry.empty_entry()
         ie['title'] = 'Feed'
         ie['blurb'] = 'Feed for %s'%consts.TITLE
-        fp.write(template.run_template_loop('feed.xml', ie, entry.get_entries(), consts.NUM_INDEX_ENTRIES))
+        fp.write(template.run_template_loop('feed.xml',
+                                            ie, entry.get_entries(),
+                                            consts.NUM_INDEX_ENTRIES))
 
 def generate_tags():
+    """
+    Generate a tag archive page.
+    """
     print('Generate tags')
-    for tag, eids in gTags.items():
+    for tag, eids in entry.G_TAGS.items():
         srcentries = entry.get_entries()
         entries = {}
         for eid in eids:
@@ -103,6 +122,9 @@ def generate_tags():
             fp.write(template.run_template_entry('htmlFoot.html', ie))
 
 def regenerate():
+    """
+    Generate everything.
+    """
     #generate_archive_entry()
     numprocessed = generate_entries()
     if numprocessed > 0:
