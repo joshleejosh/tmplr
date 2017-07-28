@@ -3,6 +3,8 @@
 Template management and processing.
 """
 
+from __future__ import unicode_literals
+from builtins import open
 import os
 import cgi
 import datetime
@@ -107,7 +109,7 @@ def run_template_loop(tk, baseent, entries, numtodo=-1):
 
 def _read_template(fn):
     s = ''
-    with open(fn) as fp:
+    with open(fn, encoding='utf-8') as fp:
         s = fp.read()
     tail = os.path.split(fn)[-1]
     return {

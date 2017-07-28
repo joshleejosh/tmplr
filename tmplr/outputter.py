@@ -3,6 +3,8 @@
 The part where we actually generate the pages.
 """
 
+from __future__ import unicode_literals
+from builtins import open
 import os
 from . import consts, entry, template
 from .util import s2d
@@ -22,7 +24,7 @@ def generate_entries():
                 doit = False
         if doit or consts.FORCE:
             print('Generate entry %s'%iid)
-            with open(fn, 'w') as fp:
+            with open(fn, 'w', encoding='utf-8') as fp:
                 fp.write(template.run_template_entry('htmlHead.html', e))
                 fp.write(template.run_template_entry('entry.html', e))
                 fp.write(template.run_template_entry('htmlFoot.html', e))
@@ -36,7 +38,7 @@ def generate_index():
     print('Generate index')
     entries = entry.get_entries()
     fn = os.path.join(consts.OUTDIR, 'index.html')
-    with open(fn, 'w') as fp:
+    with open(fn, 'w', encoding='utf-8') as fp:
         ie = entry.empty_entry()
         ie['title'] = consts.INDEX_TITLE
         ie['blurb'] = consts.BLURB
@@ -46,7 +48,7 @@ def generate_index():
 
     # write a faked entry back to the input dir(!)
     fn = os.path.join(consts.INDIR, '%d.md'%consts.ARCHIVEID)
-    with open(fn, 'w') as fp:
+    with open(fn, 'w', encoding='utf-8') as fp:
         template.run_template_entry('empty.md', ie)
         ekeys = entry.sorted_entry_keys(entries)
         for k in ekeys[:consts.NUM_INDEX_ENTRIES]:
@@ -80,7 +82,7 @@ def generate_archive():
     """
     print('Generate archive')
     fn = os.path.join(consts.OUTDIR, 'archive.html')
-    with open(fn, 'w') as fp:
+    with open(fn, 'w', encoding='utf-8') as fp:
         ie = entry.empty_entry()
         ie['title'] = consts.ARCHIVE_TITLE
         ie['blurb'] = ''
@@ -94,7 +96,7 @@ def generate_feed():
     """
     print('Generate feed')
     fn = os.path.join(consts.OUTDIR, 'feed.xml')
-    with open(fn, 'w') as fp:
+    with open(fn, 'w', encoding='utf-8') as fp:
         ie = entry.empty_entry()
         ie['title'] = 'Feed'
         ie['blurb'] = 'Feed for %s'%consts.TITLE
