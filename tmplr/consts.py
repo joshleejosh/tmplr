@@ -117,3 +117,8 @@ def setup_consts(args, forceverbose, forceforce):
         if VERBOSE:
             print('watch_rate = %d'%WATCH_RATE)
 
+    if 'datetime_override' in args and args['datetime_override']:
+        NOW = datetime.datetime.strptime(args['datetime_override'], '%Y-%m-%d %H:%M:%S')
+        if VERBOSE:
+            print('NOW = %s'%NOW)
+
